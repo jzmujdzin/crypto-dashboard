@@ -6,6 +6,7 @@ try:
     from abstract_market_data import GetExchangeData
 except ModuleNotFoundError:
     sys.path.append(os.path.join(os.path.join(os.path.normpath(sys.path[0]), ".."), "market_data"))
+    from abstract_market_data import GetExchangeData
 
 
 class GetFTXData(GetExchangeData):

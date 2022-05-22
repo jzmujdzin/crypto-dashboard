@@ -5,6 +5,7 @@ try:
     from configs import credentials as cred
 except ModuleNotFoundError:
     sys.path.append(os.path.join(os.path.join(os.path.normpath(sys.path[0]), ".."), "configs"))
+    import credentials as cred
 
 
 class ConnectionClient:

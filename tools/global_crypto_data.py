@@ -6,6 +6,7 @@ try:
     from connection import ConnectionClient
 except ModuleNotFoundError:
     sys.path.append(os.path.join(os.path.join(os.path.normpath(sys.path[0]), ".."), "tools"))
+    from connection import ConnectionClient
 
 
 logger = logging.getLogger('tipper')
