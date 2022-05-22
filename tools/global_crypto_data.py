@@ -1,6 +1,6 @@
 import pandas as pd
 import requests
-from tools.connection import ConnectionClient
+from connection import ConnectionClient
 import logging
 from datetime import datetime
 import psycopg2
