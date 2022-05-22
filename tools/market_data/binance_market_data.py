@@ -1,7 +1,10 @@
-import requests
+import requests, sys, os
 import pandas as pd
-from abstract_market_data import GetExchangeData
 from datetime import datetime, timedelta
+try:
+    from abstract_market_data import GetExchangeData
+except ModuleNotFoundError:
+    sys.path.append(os.path.join(os.path.join(os.path.normpath(sys.path[0]), ".."), "market_data"))
 
 
 class GetBinanceData(GetExchangeData):

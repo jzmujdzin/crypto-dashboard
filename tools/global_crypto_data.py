@@ -1,9 +1,12 @@
 import pandas as pd
-import requests
-from connection import ConnectionClient
-import logging
+import requests, logging, psycopg2, sys, os
 from datetime import datetime
-import psycopg2
+
+try:
+    from connection import ConnectionClient
+except ModuleNotFoundError:
+    sys.path.append(os.path.join(os.path.join(os.path.normpath(sys.path[0]), ".."), "tools"))
+
 
 logger = logging.getLogger('tipper')
 logger.setLevel(logging.INFO)

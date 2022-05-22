@@ -1,8 +1,10 @@
-import pandas as pd
+import pandas as pd, sys, os
 from sqlalchemy import create_engine
-import sys
-sys.path.insert(0, '/opt/crypto-dashboard')
-import credentials as cred
+
+try:
+    from configs import credentials as cred
+except ModuleNotFoundError:
+    sys.path.append(os.path.join(os.path.join(os.path.normpath(sys.path[0]), ".."), "configs"))
 
 
 class ConnectionClient:
