@@ -1,5 +1,7 @@
 import pandas as pd
 from sqlalchemy import create_engine
+import sys
+sys.path.append("/opt/crypto-dashboard")
 import credentials as cred
 
 
