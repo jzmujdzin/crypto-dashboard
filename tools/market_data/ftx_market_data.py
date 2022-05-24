@@ -13,7 +13,7 @@ class GetFTXData(GetExchangeData):
 
     def get_ticker_info(self, base, quote, interval, days_back):
         df = pd.DataFrame(requests.get(self.get_ticker_info_url(base, quote, interval, days_back)).json()['result'])
-        df = df.apply(pd.to_numeric)
+        df.iloc[:, 1:] = df.iloc[:, 1:].apply(pd.to_numeric)
         df['startTime'] = pd.to_datetime(df.startTime)
         return df.rename(columns=self.get_column_mapping())
 
