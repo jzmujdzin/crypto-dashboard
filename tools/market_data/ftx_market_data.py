@@ -3,10 +3,10 @@ import pandas as pd
 
 from datetime import datetime, timedelta
 try:
-    from abstract_market_data import GetExchangeData
+    from tools.market_data.abstract_market_data import GetExchangeData
 except ModuleNotFoundError:
     sys.path.append(os.path.join(os.path.join(os.path.normpath(sys.path[0]), ".."), "market_data"))
-    from abstract_market_data import GetExchangeData
+    from tools.market_data.abstract_market_data import GetExchangeData
 
 
 class GetFTXData(GetExchangeData):
