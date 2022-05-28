@@ -42,7 +42,7 @@ app.layout = html.Div([
                     id='yaxis-type-mcap',
                     inline=True
                 )
-            ], style={'width': '6%', 'float': 'right', 'display': 'inline-block'}
+            ], style={'width': '9%', 'float': 'right', 'display': 'inline-block'}
             )
         ]),
 
