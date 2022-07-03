@@ -61,6 +61,28 @@ app.layout = html.Div([
 
         ], style={'height': '25%', 'width': '50%', 'float': 'right'}
         ),
+
+        html.Div([
+            html.H1(children='Look Up Your Coin',
+                    style={'text-align': 'left', 'font-family': 'Helvetica'}),
+            html.Div([
+                dcc.Input(
+                    placeholder='your coin',
+                    type='text',
+                    value=''
+                ),
+            ], style={'float': 'center', 'height': '10%', 'width': '15%', 'padding-left': '9%'}
+            ),
+        ], style={'height': '10%', 'width': '33%', 'float': 'right'}
+        ),
+
+        html.Div([
+            html.H1(children='Trending Coins',
+                    style={'text-align': 'right', 'font-family': 'Helvetica'})
+        ], style={'height': '10%', 'width': '33%', 'float': 'left'}
+        ),
+
+
     ]
 )
 
