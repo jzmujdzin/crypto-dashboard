@@ -1,4 +1,4 @@
-from dash import Dash, dcc, html, Input, Output
+from dash import Dash, dcc, html, Input, Output, dash_table
 import pandas as pd
 import plotly.graph_objects as go
 import sys, os
@@ -14,13 +14,14 @@ except ModuleNotFoundError:
 
 psql = con.ConnectionClient().postgres()
 
-q = '''select * from public.global_crypto_data'''
+gcd_q = '''select * from public.global_crypto_data'''
+symbols_q = '''select * from public.symbols'''
 
-gcd = pd.read_sql_query(q, con=psql)
+gcd = pd.read_sql_query(gcd_q, con=psql)
+symbols = pd.read_sql_query(symbols_q, con=psql)
 
 
 app = Dash(__name__, title='Crypto Dashboard')
-
 app.layout = html.Div([
         html.H1(children='Crypto Dashboard',
                 style={'text-align': 'center', 'font-family': 'Helvetica'}),
@@ -65,26 +66,46 @@ app.layout = html.Div([
         html.Div([
             html.H1(children='Look Up Your Coin',
                     style={'text-align': 'left', 'font-family': 'Helvetica'}),
-            html.Div([
-                dcc.Input(
-                    placeholder='your coin',
-                    type='text',
-                    value=''
-                ),
-            ], style={'float': 'center', 'height': '10%', 'width': '15%', 'padding-left': '9%'}
-            ),
         ], style={'height': '10%', 'width': '33%', 'float': 'right'}
         ),
 
         html.Div([
             html.H1(children='Trending Coins',
                     style={'text-align': 'right', 'font-family': 'Helvetica'})
-        ], style={'height': '10%', 'width': '33%', 'float': 'left'}
+        ], style={'height': '10%', 'width': '33%', 'float': 'left', 'text-color': '#ffffff'}
         ),
 
+        html.Div([
+            dash_table.DataTable(
+                id='look-up-your-coin-table',
+                columns=[{"name": i, "id": i, } for i in symbols.columns],
+                data=symbols.to_dict('records'),
+                filter_action='native',
+                page_size=10,
+                style_data={
+                    'width': '20px',
+                    'color': 'white',
+                    'background': '#15182B',
+                    'overflow': 'hidden',
+                },
+                style_header={
+                    'backgroundColor': '#15182B',
+                    'fontWeight': 'bold',
+                    'overflow': 'hidden'
+
+                },
+                style_filter={
+                    'backgroundColor': '#15182B',
+                    'color': 'white',
+                    'overflow': 'hidden',
+                }
+            ),
+        ], style={'height': '50%', 'width': '41%', 'float': 'right', 'padding-right': '7vw'}
+        ),
 
     ]
 )
+
 
 
 @app.callback(
