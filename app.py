@@ -32,7 +32,8 @@ app.layout = html.Div([
                     ['USD', 'BTC'],
                     'USD',
                     id='yaxis-type-volume',
-                    inline=True
+                    inline=True,
+                    className='volume_radio'
                 )
                 ], style={'width': '48%', 'display': 'inline-block'}
             ),
@@ -41,7 +42,8 @@ app.layout = html.Div([
                     ['Perc', 'USD'],
                     'Perc',
                     id='yaxis-type-mcap',
-                    inline=True
+                    inline=True,
+                    className='mcap_radio'
                 )
             ], style={'width': '9%', 'float': 'right', 'display': 'inline-block'}
             )
@@ -105,7 +107,6 @@ app.layout = html.Div([
 
     ]
 )
-
 
 
 @app.callback(
