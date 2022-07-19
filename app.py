@@ -19,6 +19,8 @@ symbols_q = '''select * from public.symbols'''
 
 gcd = pd.read_sql_query(gcd_q, con=psql)
 symbols = pd.read_sql_query(symbols_q, con=psql)
+symbols = symbols[['market_cap_rank', 'id', 'symbol', 'name', 'market_cap', 'price', 'positive_sentiment', 'negative_sentiment']]
+symbols.columns = ['market_cap_rank', 'id', 'symbol', 'name', 'price', 'market_cap', 'positive_sentiment', 'negative_sentiment']
 
 
 app = Dash(__name__, title='Crypto Dashboard')
