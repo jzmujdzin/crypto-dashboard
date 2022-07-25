@@ -1,6 +1,5 @@
 import time
 from datetime import datetime
-from json import JSONDecodeError
 
 import logging
 import os
@@ -24,24 +23,25 @@ logger.addHandler(logging.StreamHandler())
 
 class GetCoingeckoSymbolsData:
     def __init__(self):
-        self.get_symbols_data()
+        self.psql = ConnectionClient().postgres()
+        self.all_symbols = self.get_all_symbols()
         self.push_to_db()
 
     def get_symbols_data(self) -> pd.DataFrame:
         return pd.DataFrame(
             [
                 self.fetch_symbol_data_from_coingecko(row_id)
-                for row_id in self.get_symbols_data().id
+                for row_id in self.all_symbols.id
             ]
         ).dropna()
 
     def fetch_symbol_data_from_coingecko(self, id_num) -> list:
         req = requests.get(self.get_symbol_url(id_num))
-        try:
+        if req.status_code == 200:
             resp = req.json()
-        except JSONDecodeError:
+        else:
             logger.info(
-                f"""{datetime.now()} too many requests. waiting for new rate limits. currently at {id_num} need to wait {req.headers['Retry-After']} s."""
+                f"""{datetime.now()} too many requests. waiting for new rate limits. currently at {self.all_symbols[self.all_symbols.id == id_num].index[0]}/{len(self.all_symbols)} need to wait {req.headers['Retry-After']} s."""
             )
             time.sleep(int(req.headers["Retry-After"]))
             resp = requests.get(self.get_symbol_url(id_num)).json()
@@ -74,7 +74,14 @@ class GetCoingeckoSymbolsData:
         return "https://api.coingecko.com/api/v3/coins/list"
 
     def push_to_db(self):
-        df = self.get_symbols_data()
+        df = (
+            self.get_symbols_data()
+            .dropna(subset=["market_cap_rank"])
+            .iloc[:, 1:]
+            .sort_values(by="market_cap_rank")
+        )
+        logger.info("sending data to postgres")
+        df.to_sql('symbols', self.psql, if_exists='replace', index=False, schema='public')
 
 
 if __name__ == "__main__":
