@@ -81,7 +81,9 @@ class GetCoingeckoSymbolsData:
             .sort_values(by="market_cap_rank")
         )
         logger.info("sending data to postgres")
-        df.to_sql('symbols', self.psql, if_exists='replace', index=False, schema='public')
+        df.to_sql(
+            "symbols", self.psql, if_exists="replace", index=False, schema="public"
+        )
 
 
 if __name__ == "__main__":

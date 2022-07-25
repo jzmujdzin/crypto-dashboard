@@ -115,13 +115,7 @@ app.layout = html.Div(
             [
                 dash_table.DataTable(
                     id="look-up-your-coin-table",
-                    columns=[
-                        {
-                            "name": i,
-                            "id": i,
-                        }
-                        for i in symbols.columns
-                    ],
+                    columns=[{"name": i, "id": i,} for i in symbols.columns],
                     data=symbols.to_dict("records"),
                     filter_action="native",
                     page_size=10,
