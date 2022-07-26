@@ -7,6 +7,7 @@ import pandas as pd
 import requests
 import sys
 import numpy as np
+from json import JSONDecodeError
 
 try:
     from connection import ConnectionClient
@@ -40,11 +41,15 @@ class GetCoingeckoSymbolsData:
         if req.status_code == 200:
             resp = req.json()
         else:
-            logger.info(
-                f"""{datetime.now()} too many requests. waiting for new rate limits. currently at {self.all_symbols[self.all_symbols.id == id_num].index[0]}/{len(self.all_symbols)} need to wait {req.headers['Retry-After']} s."""
-            )
-            time.sleep(int(req.headers["Retry-After"]))
-            resp = requests.get(self.get_symbol_url(id_num)).json()
+            try:
+                logger.info(
+                    f"""{datetime.now()} too many requests. waiting for new rate limits. currently at {self.all_symbols[self.all_symbols.id == id_num].index[0]}/{len(self.all_symbols)} need to wait {req.headers['Retry-After']} s."""
+                )
+                time.sleep(int(req.headers["Retry-After"]))
+                resp = requests.get(self.get_symbol_url(id_num)).json()
+            except (KeyError, JSONDecodeError):
+                time.sleep(66)
+                resp = requests.get(self.get_symbol_url(id_num)).json()
         try:
             return [
                 resp["id"],
@@ -80,10 +85,11 @@ class GetCoingeckoSymbolsData:
             .iloc[:, 1:]
             .sort_values(by="market_cap_rank")
         )
+        df.to_csv("symbols_data.csv")
         logger.info("sending data to postgres")
-        df.to_sql(
-            "symbols", self.psql, if_exists="replace", index=False, schema="public"
-        )
+        #df.to_sql(
+       #     "symbols", self.psql, if_exists="replace", index=False, schema="public"
+        #)
 
 
 if __name__ == "__main__":
